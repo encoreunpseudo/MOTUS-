@@ -13,7 +13,9 @@ public:
     int longueur;
     bool etat;
     void update_mot(std::string mot_soumis);
-    void afficher();
+    void afficher() const;
+    bool est_trouve() const;
+
 private:
     void transfomer_expression_vecteur(std::string expression);
     

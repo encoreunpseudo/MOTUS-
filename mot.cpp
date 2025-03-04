@@ -38,7 +38,16 @@ void Mot::update_mot(std::string mot_soumis) {
     
     etat = mot_trouve;
 }
+bool Mot::est_trouve() const {
+    return etat;
+}
 
-void Mot::afficher(){
+void Mot::afficher() const {
+    for (size_t i = 0; i < longueur; i++) {
+        std::cout << exp_etat[i].symb;
+        
+        std::cout << "(" << exp_etat[i].etat << ") ";
+    }
     
+    std::cout << "- Mot " << (etat ? "trouvé" : "non trouvé") << std::endl;
 }
