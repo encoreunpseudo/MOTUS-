@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>EndScreen.qml</file>
+    </qresource>
+</RCC>

@@ -1,40 +1,37 @@
-#include "grille.h"
-#include <iostream>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "game.h"
+#include "timer.h"
+#include <QtQuickControls2/QQuickStyle>
+#include <QtQuickControls2/QQuickStyle>  // Chemin correct
+// Chemin correct
+int main(int argc, char *argv[])
+{
+    // Définir un style non-natif qui prend en charge la personnalisation
+    QQuickStyle::setStyle("Basic");  // Décommentez cette ligne et choisissez un style
 
-int main() {
-    try {
-        // Création d'une grille avec un dictionnaire
-        Grille grille("dictionnaire.txt", 6);
-        
-        std::cout << "Bienvenue dans Motus !" << std::endl;
-        grille.afficher();
-        
-        std::string mot_soumis;
-        while (!grille.est_gagnee() && !grille.est_perdue()) {
-            std::cout << "Entrez un mot : ";
-            std::cin >> mot_soumis;
-            
-            try {
-                grille.soumettre_mot(mot_soumis);
-            } catch (const MotInvalideException& e) {
-                std::cerr << "Erreur : " << e.what() << std::endl;
-            } catch (const DepassementTentativesException& e) {
-                std::cerr << "Erreur : " << e.what() << std::endl;
-                break;
-            }
-            
-            grille.afficher();
-        }
-        
-        if (grille.est_gagnee()) {
-            std::cout << "Bravo, vous avez trouvé le mot !" << std::endl;
-        } else {
-            std::cout << "Dommage ! Le mot était : " << grille.get_mot_a_deviner() << std::endl;
-        }
-        
-    } catch (const std::exception& e) {
-        std::cerr << "Erreur : " << e.what() << std::endl;
-    }
-    
-    return 0;
+    QGuiApplication app(argc, argv);
+
+    // Création des instances des classes principales
+    Game game;
+    Timer timer;
+
+    // Initialisation forcée du jeu
+    game.startNewGame();  // Ajoutez ceci pour initialiser tous les états
+
+    // Configuration du moteur QML
+    QQmlApplicationEngine engine;
+
+    // Exposition des classes C++ au contexte QML
+    engine.rootContext()->setContextProperty("game", &game);
+    engine.rootContext()->setContextProperty("timer", &timer);
+
+    // Chargement du fichier QML principal
+    engine.load(QUrl(QStringLiteral("qrc:/Main.qml")));
+
+    if (engine.rootObjects().isEmpty())
+        return -1;
+
+    return app.exec();
 }
